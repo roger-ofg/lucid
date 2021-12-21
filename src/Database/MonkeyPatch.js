@@ -151,7 +151,9 @@ KnexQueryBuilder.prototype.paginate = async function (page = 1, perPage = 20) {
   })
 
   const counts = await countByQuery.count('* as total')
-  const total = _.get(counts, '0.total', 0)
+  const total = counts.length === 1
+    ? _.get(counts, '0.total', 0)
+    : counts.length
   const data = total === 0 ? [] : await this.forPage(page, perPage)
 
   return {
